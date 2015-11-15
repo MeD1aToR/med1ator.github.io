@@ -8,7 +8,7 @@ var count = 0;
 function $_GET(key) { return decodeURIComponent(window.location.search.match(new RegExp(key + '=([^&=]+)'))[1]); }
 get_friends_app();
 function get_friends_app() {
-	var code =  'return API.users.get({"user_ids":API.friends.getAppUsers({"v": "5.28"}), "fields": "photo_50", "v": "5.28"});'; // вернуть массив members
+	var code =  'return API.users.get({"user_ids":API.friends.getAppUsers({"v": "5.40"}), "fields": "photo_50", "v": "5.40"});'; // вернуть массив members
 
 	VK.api("execute", {code: code}, function(r) {
 		if (r.response) {
@@ -100,7 +100,7 @@ function Add(user_id) {
 	friends = [];
 	if (user_id.indexOf("com/") >= 0)
 		user_id = user_id.split('com/')[1];
-	VK.api('utils.resolveScreenName', {screen_name: user_id, v: '5.28'}, function(r) {
+	VK.api('utils.resolveScreenName', {screen_name: user_id, v: '5.40'}, function(r) {
 		if(r.response) {
 			if (r.response.type == 'user') {
 				AddUser(user_id);
@@ -116,7 +116,7 @@ function Add(user_id) {
 }
 
 function AddUser(user_id) {
-	VK.api('users.get', {user_ids: user_id, fields: 'photo_50,counters', v: '5.28'}, function(r) {
+	VK.api('users.get', {user_ids: user_id, fields: 'photo_50,counters', v: '5.40'}, function(r) {
 			if(r.response) {
 				if (user_ids.join().indexOf(r.response[0].id) >= 0)
 				{
@@ -173,7 +173,7 @@ function AddUser(user_id) {
 
 // получаем информацию о группе и её участников
 function getMembers(group_id) {
-	VK.api('groups.getById', {group_id: group_id, fields: 'photo_50,members_count', v: '5.28'}, function(r) {
+	VK.api('groups.getById', {group_id: group_id, fields: 'photo_50,members_count', v: '5.40'}, function(r) {
 		if(r.response) {
 			if (user_ids.join().indexOf(r.response[0].id) >= 0)
 			{
@@ -228,7 +228,7 @@ function getMembers(group_id) {
 }
 
 function AddGroup(user_id) {
-	VK.api('groups.getById', {group_id: user_id, fields: 'photo_50', v: '5.28'}, function(r) {
+	VK.api('groups.getById', {group_id: user_id, fields: 'photo_50', v: '5.40'}, function(r) {
 			if(r.response) {
 				if (user_ids.join().indexOf(r.response[0].id) >= 0)
 				{
@@ -319,11 +319,11 @@ function GetFriendUser() {
 }
 // получаем участников группы, members_count - количество участников
 function getMembers20k(group_id, members_count) {
-	var code =  'var members = API.groups.getMembers({"group_id": ' + group_id + ', "v": "5.28", "sort": "id_asc", "count": "1000", "offset": ' + friends[count].length + '}).items;' // делаем первый запрос и создаем массив
+	var code =  'var members = API.groups.getMembers({"group_id": ' + group_id + ', "v": "5.40", "sort": "id_asc", "count": "1000", "offset": ' + friends[count].length + '}).items;' // делаем первый запрос и создаем массив
 			+	'var offset = 1000;' // это сдвиг по участникам группы
 			+	'while (offset < 25000 && (offset + ' + friends[count].length + ') < ' + members_count + ')' // пока не получили 20000 и не прошлись по всем участникам
 			+	'{'
-				+	'members = members + "," + API.groups.getMembers({"group_id": ' + group_id + ', "v": "5.28", "sort": "id_asc", "count": "1000", "offset": (' + friends[count].length + ' + offset)}).items;' // сдвиг участников на offset + мощность массива
+				+	'members = members + "," + API.groups.getMembers({"group_id": ' + group_id + ', "v": "5.40", "sort": "id_asc", "count": "1000", "offset": (' + friends[count].length + ' + offset)}).items;' // сдвиг участников на offset + мощность массива
 				+	'offset = offset + 1000;' // увеличиваем сдвиг на 1000
 			+	'};'
 			+	'return members;'; // вернуть массив members
@@ -353,7 +353,7 @@ function getMembers20k(group_id, members_count) {
 	});
 }
 function GetFriendApp(offset) {
-		VK.api('groups.getMembers', {group_id: user_ids[count], offset: offset, v: '5.28'}, function(r) {
+		VK.api('groups.getMembers', {group_id: user_ids[count], offset: offset, v: '5.40'}, function(r) {
 			if(r.response) {
 				if (offset == 0)
 					friends[count] = r.response.items;
@@ -384,7 +384,7 @@ function MutualFriends() {
 	mutual_friends = [];
 	if (friends.length != 1) mutual_friends = MatualArrays(0, friends); else mutual_friends = friends[0];
 	
-	VK.api('users.get', {user_ids: mutual_friends.join(), fields: 'photo_50', v: '5.28'}, function(r) {
+	VK.api('users.get', {user_ids: mutual_friends.join(), fields: 'photo_50', v: '5.40'}, function(r) {
 		if(r.response)
 			WriteUser(r.response);
 	});
